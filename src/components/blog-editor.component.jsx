@@ -1,5 +1,7 @@
 import logo from "../imgs/logo.png";
 import { Link } from "react-router-dom";
+import AnimationWrapper from "../common/page-animation";
+import  defaultBanner from "../imgs/blog banner.png"; 
 const BlogEditor = () => {
 
     return(
@@ -23,6 +25,44 @@ const BlogEditor = () => {
                 </button>
             </div>
         </nav>
+        <AnimationWrapper>
+                <section>
+                    <div className="mx-auto max-w-[900px] w-full">
+
+
+                        <div className="relative aspect-video hover:opacity-80 bg-white 
+                        border-4 border-grey">
+                            <label htmlFor="uploadBanner">
+
+                                <img 
+                                
+                                src={defaultBanner}
+                                className="z-20"
+                                />
+                                <input 
+                                id="uploadBanner"
+                                type="file"
+                                accept=".png, jpg, jpeg"
+                                hidden
+                                //onChange={handelBannerUpload}
+
+                                />
+                            </label>
+
+                        </div>
+                            <textarea
+                                placeholder="Blog Title"
+                                className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40"
+                                //onKeyDown={handleTitleKeyDown}
+                                //onChange= {handleTitleChange}
+                            ></textarea>
+
+                            <hr className="w-full opacity-10 my-5"/>
+
+                            <div id= "textEditor" className="font-inter"></div>
+                    </div>
+                </section>
+            </AnimationWrapper>
       </>
     )
 }
