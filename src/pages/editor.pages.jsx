@@ -1,9 +1,9 @@
-//import { Navigate } from "react-router-dom";
-/*import BlogEditor from "../components/blog-editor.component";
+import { Navigate } from "react-router-dom";
+import BlogEditor from "../components/blog-editor.component";
 import PublishForm from  "../components/publish-form.component";
-import { createContext } from "react";
+//import { createContext } from "react";
 
-const blogStructure = {
+/*const blogStructure = {
 
   title: '',
   banner: '',
@@ -11,9 +11,9 @@ const blogStructure = {
   tags: [],
   des: '',
   author: { personal_info: {} }
-};
+};*/
 
-export const EditorContext = createContext({});
+//export const EditorContext = createContext({});
 
 const Editor = () =>{
      // user can only edit when its logged in so here is the condition
@@ -30,4 +30,4 @@ const Editor = () =>{
    </>
     )
 }
-export default Editor;*/
+export default Editor;
