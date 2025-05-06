@@ -4,7 +4,7 @@ import UserAuthForm from './pages/userAuthForm.page';
 import Editor from './pages/editor.pages'; // Import your Editor component
 import { createContext } from 'react';
 
-export const UserContext = createContext({})
+//export const UserContext = createContext({})
 
 const App = () => {
   // const [userAuth, setUserAuth] = useState();
