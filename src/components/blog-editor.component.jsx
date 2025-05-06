@@ -109,10 +109,10 @@ const BlogEditor = () => {
         setBlog({...blog,title:input.value })
         
         }
-    /*const handleError =(e) =>{
+    const handleError =(e) =>{
         let img = e.target ;
         img.src = defaultBanner
-    }*/
+    }
     const handlePublishEvent = () =>{
         if(!defaultBanner.length){
             return toast.error("Upload a blog banner to publish")
