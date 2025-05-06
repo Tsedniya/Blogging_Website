@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import AnimationWrapper from "../common/page-animation";
 import { useNavigate } from "react-router-dom"; // Ensure this import is correct
-import { EditorContext } from "../context/editor-context"; // Ensure this import is correct
+//import { EditorContext } from "../context/editor-context"; // Ensure this import is correct
 
 const PublishForm = () => {
     const characterLimit = 200;

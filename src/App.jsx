@@ -3,6 +3,7 @@ import Navbar from './components/navbar.component';
 import UserAuthForm from './pages/userAuthForm.page';
 import Editor from './pages/editor.pages'; // Import your Editor component
 import { createContext } from 'react';
+import HomePage from './pages/home.page';
 
 //export const UserContext = createContext({})
 
