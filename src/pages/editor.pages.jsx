@@ -7,7 +7,7 @@ import { createContext } from "react";
 
 /*const blogStructure = {
 
-  title: '',
+  title: '', 
   banner: '',
   context: [],
   tags: [],
