@@ -72,7 +72,7 @@ const BlogEditor = () => {
                     draft: true,
                 };
     
-                axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj, {
+                /*axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj, {
                     headers: {
                         'Authorization': `Bearer ${access_token}`, // Fixed syntax
                     },
@@ -90,7 +90,7 @@ const BlogEditor = () => {
                     e.target.classList.remove("disable");
                     toast.dismiss(loadingToast);
                     return toast.error(response.data.error);
-                });
+                });*/
             });
         }
     };
