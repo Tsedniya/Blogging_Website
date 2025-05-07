@@ -12,7 +12,7 @@ const UserAuthForm = ({ type }) => {
     password: "",
   });
   const [message, setMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(true);
 
   // Handle input changes
   const handleChange = (e) => {

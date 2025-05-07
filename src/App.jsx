@@ -8,6 +8,7 @@ import Wrapper from "./components/Wrapper";
 import ViewBlog from "./pages/blog/ViewBlog";
 import EditBlog from "./pages/blog/EditBlog";
 import Reports from "./pages/blog/Reports";
+import Home from "./pages/home.page";
 
 // Uncomment and define UserContext if needed
 // export const UserContext = createContext({});

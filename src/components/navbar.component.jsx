@@ -82,7 +82,7 @@ const Navbar = () => {
                        </>
                     */}
 
-          {/* <UserNavigationPanel/> */}
+          {/* <UserNavigationPanel /> */}
           <Link className="btn-dark py-2" to="/signin">
             Sign In
           </Link>
@@ -91,6 +91,8 @@ const Navbar = () => {
           </Link>
         </div>
       </nav>
+
+      <Outlet />
     </>
   );
 };
