@@ -1,4 +1,3 @@
-
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/navbar.component";
 import UserAuthForm from "./pages/userAuthForm.page";
@@ -10,27 +9,21 @@ import ViewBlog from "./pages/blog/ViewBlog";
 import EditBlog from "./pages/blog/EditBlog";
 import Reports from "./pages/blog/Reports";
 
-
-//export const UserContext = createContext({})
+// Uncomment and define UserContext if needed
+// export const UserContext = createContext({});
 
 const App = () => {
   // const [userAuth, setUserAuth] = useState();
-  /* useEffect(() => {
-      let userInSession = lookInSesstion("user");
-      userInSession ? setUserAuth(JSON.parse(userInSession)) : setUserAuth({access_token: null});
-  }, []) */
+  // useEffect(() => {
+  //   let userInSession = lookInSession("user");
+  //   userInSession ? setUserAuth(JSON.parse(userInSession)) : setUserAuth({ access_token: null });
+  // }, []);
 
   return (
-    //<UserContext.Provider value={userAuth, setUserAuth}>
+    //<UserContext.Provider value={{ userAuth, setUserAuth }}>
     <Routes>
-<<<<<<< HEAD
-      <Route path="/" element={<Navbar />}> 
-        <Route index element ={<HomePage/>} />
-=======
       <Route element={<Wrapper />}>
         <Route path="/" element={<Home />} />
-
->>>>>>> a812f0770f289c6004486343b04a31161cd4707e
         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
         <Route path="signup" element={<UserAuthForm type="sign-up" />} />
         <Route path="blogs/edit/:id" element={<EditBlog />} />
