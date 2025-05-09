@@ -37,7 +37,7 @@ const ViewBlog = () => {
             setError("An unexpected error occurred. Please try again later.");
           }
         } else {
-          console.error("Error fetching blog data:", err);
+          console.error("Error fetching blog data:", err.message);
           setError(
             "Failed to connect to the server. Please check your network."
           );

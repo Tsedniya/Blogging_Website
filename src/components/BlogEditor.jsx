@@ -2,13 +2,45 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import logo from "../imgs/logo.png";
-const BlogEditor = ({ onSubmit, onCancle, defaultData, loding }) => {
+const categories = [
+  {
+    id: 1,
+    name: "Technology",
+  },
+  {
+    id: 2,
+    name: "Health",
+  },
+  {
+    id: 3,
+    name: "Lifestyle",
+  },
+  {
+    id: 4,
+    name: "Education",
+  },
+  {
+    id: 5,
+    name: "Business",
+  },
+  {
+    id: 6,
+    name: "Travel",
+  },
+];
+const BlogEditor = ({
+  onSubmit,
+  onCancle,
+  defaultData,
+  loading,
+  variant = "create",
+}) => {
   const [blog, setBlog] = useState({
     title: defaultData.title || "",
-    banner: defaultData.banner || "",
+    image: defaultData.image || "",
     content: defaultData.content || "",
     tags: defaultData.tags || [],
-    catagory: defaultData.category || "",
+    category: defaultData.category || "",
     description: defaultData.description || "",
   });
   const [imageFile, setImageFile] = useState(null);
@@ -22,9 +54,25 @@ const BlogEditor = ({ onSubmit, onCancle, defaultData, loding }) => {
       return;
     }
     const imageUrl = URL.createObjectURL(file);
-    setBlog((rest) => ({ ...rest, banner: imageUrl }));
+    setBlog((rest) => ({ ...rest, image: imageUrl }));
   };
-  const handleSubmit = (blog) => {
+  const handleSubmit = () => {
+    if (!blog.title.trim()) {
+      toast.error("Blog title is required");
+      return;
+    }
+    if (!blog.description.trim()) {
+      toast.error("Blog description is required");
+      return;
+    }
+    if (!blog.content.trim()) {
+      toast.error("Blog content is required");
+      return;
+    }
+    if (!blog.category) {
+      toast.error("Please select a category");
+      return;
+    }
     onSubmit(blog, imageFile);
   };
 
@@ -35,8 +83,12 @@ const BlogEditor = ({ onSubmit, onCancle, defaultData, loding }) => {
           <img src={logo} />
         </Link>
         <div className="flex gap-4 ml-auto">
-          <button className="btn-dark py-2" onClick={handleSubmit}>
-            Publish
+          <button
+            className="btn-dark py-2"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {variant === "create" ? "Publish" : "Update"}
           </button>
           <button className="btn-light py-2" onClick={onCancle}>
             cancle
@@ -57,7 +109,7 @@ const BlogEditor = ({ onSubmit, onCancle, defaultData, loding }) => {
                         border-4 border-grey w-[90%] mx-auto"
         >
           <label htmlFor="uploadBanner" className="cursor-pointer">
-            <img src={blog.banner} className="z-20" />
+            <img src={blog.image} className="z-20" />
             <input
               className="w-full object-cover"
               id="uploadBanner"
@@ -68,12 +120,39 @@ const BlogEditor = ({ onSubmit, onCancle, defaultData, loding }) => {
             />
           </label>
         </div>
+        <div className="mt-5 flex gap-4">
+          <textarea
+            value={blog.description}
+            placeholder="Blog Description"
+            className="block text-lg w-full h-20 outline-none mt-5 leading-5 bg-grey p-3 rounded-md placeholder:opacity-40"
+            onChange={(e) =>
+              setBlog((rest) => ({ ...rest, description: e.target.value }))
+            }
+          ></textarea>
+          <select
+            value={blog.category}
+            className="text-lg w-full h-12 outline-none mt-5 bg-gray-200 p-3 border border-[#333]/60 rounded-md placeholder:opacity-40"
+            onChange={(e) =>
+              setBlog((rest) => ({ ...rest, category: e.target.value }))
+            }
+          >
+            <option disabled value={""}>
+              Select Category
+            </option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <textarea
-          value={blog.title}
+          value={blog.content}
           placeholder="write something..."
-          className="text-xl w-full h-[300px] outline-none mt-10 leading-3 bg-grey p-5 rounded-md placeholder:opacity-40"
+          className="text-xl w-full h-[300px] outline-none mt-10 leading-6 bg-grey p-5 rounded-md placeholder:opacity-40"
           onChange={(e) =>
-            setBlog((rest) => ({ ...rest, title: e.target.value }))
+            setBlog((rest) => ({ ...rest, content: e.target.value }))
           }
         ></textarea>
       </div>
