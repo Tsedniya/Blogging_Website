@@ -3,11 +3,13 @@ import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png"; 
 import EditorJS from "@editorjs/editorjs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { tools } from "./tools.component";
+import { EditorContext } from "../context/editor-context"; 
 
 const BlogEditor = () => {
+    const { setBlog, setEditorState } = useContext(EditorContext);
     const [title, setTitle] = useState("");
     const [banner, setBanner] = useState(defaultBanner);
     const [textEditor, setTextEditor] = useState(null);
@@ -28,78 +30,43 @@ const BlogEditor = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setBanner(reader.result); // Set the uploaded banner
+                setBanner(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    const handleSaveDraft = (e) => {
-        if (e.target.className.includes("disable")) return;
-
+    const handleSaveDraft = async () => {
         if (!title) {
             return toast.error("Write blog title before saving it as a draft.");
         }
 
-        let loadingToast = toast.loading("Saving Draft...");
-        e.target.classList.add("disable");
-
-        if (textEditor && textEditor.isReady) {
-            textEditor.save().then(content => {
-                const blogObj = {
-                    title,
-                    banner,
-                    content,
-                    draft: true,
-                };
-
-                // Uncomment and implement the API call
-                /*
-                axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj)
-                .then(() => {
-                    e.target.classList.remove("disable");
-                    toast.dismiss(loadingToast);
-                    toast.success("Draft saved!");
-                })
-                .catch(({ response }) => {
-                    e.target.classList.remove("disable");
-                    toast.dismiss(loadingToast);
-                    return toast.error(response.data.error);
-                });
-                */
-            });
-        }
+        const content = await textEditor.save();
+        const blogObj = {
+            title,
+            banner,
+            content,
+            draft: true,
+        };
+        setBlog(blogObj); // Update context with blog data
+        toast.success("Draft saved successfully!");
     };
 
-    const handlePublishEvent = () => {
+    const handlePublishEvent = async () => {
         if (!banner) return toast.error("Upload a blog banner to publish.");
         if (!title) return toast.error("Write blog title to publish.");
 
-        if (textEditor && textEditor.isReady) {
-            textEditor.save().then(data => {
-                if (data.blocks.length) {
-                    const blogObj = {
-                        title,
-                        banner,
-                        content: data,
-                        draft: false,
-                    };
-
-                    // Uncomment and implement the API call
-                    /*
-                    axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj)
-                    .then(() => {
-                        toast.success("Blog published successfully!");
-                    })
-                    .catch(({ response }) => {
-                        toast.error(response.data.error);
-                    });
-                    */
-                } else {
-                    return toast.error('Write something in your blog to publish it.');
-                }
-            });
-        }
+        const data = await textEditor.save();
+        const blogObj = {
+            title,
+            banner,
+            content: data,
+            draft: false,
+        };
+        setBlog(blogObj); // Update context with blog data
+        toast.success("Redirecting to publish form...");
+        setEditorState("publisher"); // Switch to publisher view
+       
     };
 
     return (
@@ -125,11 +92,7 @@ const BlogEditor = () => {
                     <div className="mx-auto max-w-[900px] w-full">
                         <div className="relative aspect-video hover:opacity-80 bg-white border-4 border-grey">
                             <label htmlFor="uploadBanner">
-                                <img 
-                                    src={banner}
-                                    className="z-20"
-                                    alt="Blog Banner"
-                                />
+                                <img src={banner} className="z-20" alt="Blog Banner" />
                                 <input 
                                     id="uploadBanner"
                                     type="file"
@@ -150,7 +113,7 @@ const BlogEditor = () => {
                     </div>
                 </section>
             </AnimationWrapper>
-            <Toaster /> {/* Toast notifications */}
+            <Toaster /> 
         </>
     );
 };
