@@ -1,25 +1,20 @@
-import { createContext, useState } from "react";
+// context/editor-context.js
+import { createContext, useState } from 'react';
 
-// Create the context
 export const EditorContext = createContext();
 
-// Provide the context
 export const EditorProvider = ({ children }) => {
-  const [blog, setBlog] = useState({
-    banner: "",
-    title: "",
-    tags: [],
-    des: "",
-    content: "",
-  });
-
-  const [editorState, setEditorState] = useState("editor"); // Default state
-
-  return (
-    <EditorContext.Provider
-      value={{ blog, setBlog, editorState, setEditorState }}
-    >
-      {children}
-    </EditorContext.Provider>
-  );
+    const [editorState, setEditorState] = useState("editor"); // "editor" or "publisher"
+    const [blog, setBlog] = useState({});
+    
+    return (
+        <EditorContext.Provider value={{ 
+            editorState, 
+            setEditorState,  // Make sure this is included
+            blog, 
+            setBlog 
+        }}>
+            {children}
+        </EditorContext.Provider>
+    );
 };
