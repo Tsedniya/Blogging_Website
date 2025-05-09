@@ -3,7 +3,7 @@ import { useState } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import AnimationWrapper from "../common/page-animation";
-import api from "../common/api/route"; // Import the axios instance
+import api from "../common/api/connect"; // Import the axios instance
 
 const UserAuthForm = ({ type }) => {
   const [formData, setFormData] = useState({
