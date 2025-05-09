@@ -5,7 +5,7 @@ import api from "../../common/api/connect";
 import { toast, Toaster } from "react-hot-toast";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const CreateBlog = () => {
+const EditBlog = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = React.useState({
@@ -85,7 +85,7 @@ const CreateBlog = () => {
       <BlogEditor
         variant={"edit"}
         onSubmit={handleSubmit}
-        onCancle={() => {
+        onCancel={() => {
           console.log("cancled!");
         }}
         loading={loading}
@@ -95,4 +95,4 @@ const CreateBlog = () => {
   );
 };
 
-export default CreateBlog;
+export default EditBlog;

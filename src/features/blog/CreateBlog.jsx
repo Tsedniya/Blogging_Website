@@ -40,7 +40,7 @@ const CreateBlog = () => {
       <Toaster />
       <BlogEditor
         onSubmit={handleSubmit}
-        onCancle={() => {
+        onCancel={() => {
           console.log("cancled!");
         }}
         loading={loading}

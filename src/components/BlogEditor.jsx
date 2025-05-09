@@ -30,7 +30,7 @@ const categories = [
 ];
 const BlogEditor = ({
   onSubmit,
-  onCancle,
+  onCancel,
   defaultData,
   loading,
   variant = "create",
@@ -90,8 +90,8 @@ const BlogEditor = ({
           >
             {variant === "create" ? "Publish" : "Update"}
           </button>
-          <button className="btn-light py-2" onClick={onCancle}>
-            cancle
+          <button className="btn-light py-2" onClick={onCancel}>
+            cancel
           </button>
         </div>
       </div>
