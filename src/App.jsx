@@ -8,7 +8,7 @@ import Wrapper from "./components/Wrapper";
 import ViewBlog from "./pages/blog/ViewBlog";
 import EditBlog from "./pages/blog/EditBlog";
 import Reports from "./pages/blog/Reports";
-import Home from "./pages/home.page";
+import CreateBlog from "./features/blog/CreateBlog";
 
 // Uncomment and define UserContext if needed
 // export const UserContext = createContext({});
@@ -31,7 +31,7 @@ const App = () => {
         <Route path="blogs/:id" element={<ViewBlog />} />
         <Route path="reports" element={<Reports />} />
       </Route>
-      <Route path="/editor" element={<Editor />} />
+      <Route path="/editor" element={<CreateBlog />} />
     </Routes>
     //</UserContext.Provider>
   );

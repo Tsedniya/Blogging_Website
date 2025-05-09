@@ -27,9 +27,14 @@ const PublishForm = () => {
   const handleKeyDown = (e) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      let tag = e.target.value.trim();
-      if (tag && tags.length < tagLimit && !tags.includes(tag)) {
-        setBlog({ ...blog, tags: [...tags, tag] });
+      let tag = e.target.value;
+
+      if (tags.length < tagLimit) {
+        if (!tags.includes(tag) && tag.length) {
+          setBlog({ ...blog, tags: [...tags, tag] });
+        } else {
+          toast.error(`You can add a maximum of ${tagLimit} tags.`);
+        }
         e.target.value = ""; // Clear input after adding tag
       } else {
         toast.error(`You can add a maximum of ${tagLimit} tags.`);
@@ -41,7 +46,9 @@ const PublishForm = () => {
     if (e.target.className.includes("disable")) return;
     if (!title) return toast.error("Write blog title before publishing.");
     if (!des || des.length > characterLimit) {
-      return toast.error(`Description must be under ${characterLimit} characters.`);
+      return toast.error(
+        `Description must be under ${characterLimit} characters.`
+      );
     }
     if (!tags.length) return toast.error("Enter at least 1 tag.");
 
@@ -84,8 +91,12 @@ const PublishForm = () => {
           <div className="w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4">
             <img src={banner} alt="Blog Banner" />
           </div>
-          <h1 className="text-4xl font-medium mt-2 leading-tight line-clamp-2">{title}</h1>
-          <p className="font-inter line-clamp-2 text-xl leading-7 mt-4">{des}</p>
+          <h1 className="text-4xl font-medium mt-2 leading-tight line-clamp-2">
+            {title}
+          </h1>
+          <p className="font-inter line-clamp-2 text-xl leading-7 mt-4">
+            {des}
+          </p>
         </div>
         <div className="border-grey lg:border-1 lg:pl-8">
           <p className="text-dark-grey mb-2 mt-9">Blog Title</p>
@@ -96,7 +107,9 @@ const PublishForm = () => {
             className="input-box pl-4"
             onChange={handleBlogTitleChange}
           />
-          <p className="text-dark-grey mb-2 mt-9">Short description about your blog</p>
+          <p className="text-dark-grey mb-2 mt-9">
+            Short description about your blog
+          </p>
           <input
             type="text"
             placeholder="Short Description"
@@ -115,7 +128,9 @@ const PublishForm = () => {
           {characterLimit - des.length} characters left
         </p>
 
-        <p className="text-dark-grey mb-2 mt-9">Topics - (Helps in searching and ranking your blog post)</p>
+        <p className="text-dark-grey mb-2 mt-9">
+          Topics - (Helps in searching and ranking your blog post)
+        </p>
         <div className="relative input-box pl-2 py-2 pb-4">
           <input
             type="text"
@@ -127,8 +142,12 @@ const PublishForm = () => {
             <Tag tag={tag} tagIndex={i} key={i} />
           ))}
         </div>
-        <p className="mt-1 mb-4 text-dark-grey text-right">{tagLimit - tags.length} Tags Left</p>
-        <button className="btn-dark px-8" onClick={publishBlog}>Publish</button>
+        <p className="mt-1 mb-4 text-dark-grey text-right">
+          {tagLimit - tags.length} Tags Left
+        </p>
+        <button className="btn-dark px-8" onClick={publishBlog}>
+          Publish
+        </button>
       </section>
     </AnimationWrapper>
   );
