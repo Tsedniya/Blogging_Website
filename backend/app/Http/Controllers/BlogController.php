@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use App\Models\Comment;
 use App\Models\Report;
+use App\Models\Like;
+
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -123,6 +127,26 @@ class BlogController extends Controller
         }
     }
     
+    // Function to get likes by blog id
+    public function getLikes($id)
+    {
+        try {
+            $likes = Like::with('user.profile')
+                ->where('blog_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
     
+            return response()->json($likes);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching likes:', [
+                'blog_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['error' => 'An error occurred while fetching likes.', 'details' => $e->getMessage()], 500);
+        }
+    }
+                
 }
 

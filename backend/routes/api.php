@@ -32,4 +32,5 @@ Route::get('/index', [BlogController::class, 'index']);
     Route::get('/auth/check', [BlogController::class, 'checkAuth']);
     Route::get('/blogs/{id}', [BlogController::class, 'getBlog']);
     Route::get('/blogs/{id}/comments', [BlogController::class, 'getComments']);
+    Route::get('/blogs/{id}/likes', [BlogController::class, 'getLikes']); 
     Route::get('/blogs/{id}/reports', [BlogController::class, 'getReportedBlog']);
