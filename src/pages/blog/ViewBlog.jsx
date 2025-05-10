@@ -186,7 +186,7 @@ const ViewBlog = () => {
       <StatusModal
         message={modalMessage}
         type={modalType}
-        onClose={() => setModalMessage("")} // Close the modal
+        onClose={() => setModalMessage("")}
       />
       <ReportModal
         isOpen={isReportModalOpen}
