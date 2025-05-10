@@ -6,6 +6,7 @@ import ReportModal from "../../features/modals/report";
 
 const ViewBlog = () => {
   const { id } = useParams();
+  //const authUser = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [comments, setComments] = useState([]);
