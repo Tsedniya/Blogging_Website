@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 function BlogReport() {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState('');
+  const [commentCounts, setCommentCounts] = useState({});
+  const [likesCounts, setLikesCounts] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,6 +22,40 @@ function BlogReport() {
 
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    const fetchCommentsCounts = async () => {
+      try {
+        const counts = {};
+        for (const blog of blogs) {
+          const res = await api.get(`/blogs/${blog.id}/comments`);
+          counts[blog.id] = res.data.length;
+        }
+        setCommentCounts(counts);
+      } catch (err) {
+        console.error('Failed to fetch comment counts', err);
+      }
+    };
+
+    if (blogs.length > 0) fetchCommentsCounts();
+  }, [blogs]);
+
+  useEffect(() => {
+    const fetchLikesCounts = async () => {
+      try {
+        const counts = {};
+        for (const blog of blogs) {
+          const res = await api.get(`/blogs/${blog.id}/likes`);
+          counts[blog.id] = res.data.length;
+        }
+        setLikesCounts(counts);
+      } catch (err) {
+        console.error('Failed to fetch likes counts', err);
+      }
+    };
+    if (blogs.length > 0) fetchLikesCounts();
+  }, [blogs]);
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -82,7 +118,7 @@ function BlogReport() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>24 Comments</span>
+                    <span>{commentCounts[blog.id] || 0} Comments</span>
                   </button>
 
                   <button
@@ -97,7 +133,7 @@ function BlogReport() {
                     >
                       <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                     </svg>
-                    <span>142 Likes</span>
+                    <span>{likesCounts[blog.id] || 0} Likes</span>
                   </button>
 
                   <button

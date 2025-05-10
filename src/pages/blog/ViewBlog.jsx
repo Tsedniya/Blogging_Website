@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import api from "../../common/api/connect";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import api from '../../common/api/connect';
 
 const ViewBlog = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
   const [comments, setComments] = useState([]);
-  const [error, setError] = useState("");
+
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const authResponse = await api.get("/auth/check");
+        const authResponse = await api.get('/auth/check');
         if (!authResponse.data.authenticated) {
-          setError("Please sign in to view this blog.");
+          setError('Please sign in to view this blog.');
           return;
         }
 
@@ -26,20 +27,20 @@ const ViewBlog = () => {
       } catch (err) {
         if (err.response) {
           if (err.response.status === 401) {
-            setError("Please sign in to view this blog.");
+            setError('Please sign in to view this blog.');
           } else if (err.response.status === 404) {
-            setError("Blog not found.");
+            setError('Blog not found.');
           } else if (err.response.status === 500) {
             setError(
-              "An error occurred on the server. Please try again later."
+              'An error occurred on the server. Please try again later.'
             );
           } else {
-            setError("An unexpected error occurred. Please try again later.");
+            setError('An unexpected error occurred. Please try again later.');
           }
         } else {
-          console.error("Error fetching blog data:", err.message);
+          console.error('Error fetching blog data:', err.message);
           setError(
-            "Failed to connect to the server. Please check your network."
+            'Failed to connect to the server. Please check your network.'
           );
         }
       }
@@ -49,12 +50,12 @@ const ViewBlog = () => {
   }, [id]);
   if (error) {
     return (
-      <div className="text-center mt-10">
+      <div className="mt-10 text-center">
         {error && (
-          <div className="flex items-center justify-center gap-2 mb-4 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+          <div className="flex items-center justify-center gap-2 p-3 mb-4 border border-red-200 rounded-lg bg-red-50 animate-fade-in">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-red-500"
+              className="w-5 h-5 text-red-500"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -64,17 +65,17 @@ const ViewBlog = () => {
                 clipRule="evenodd"
               />
             </svg>
-            <p className="text-red-600 font-medium">{error}</p>
+            <p className="font-medium text-red-600">{error}</p>
           </div>
         )}
 
         <button
-          onClick={() => navigate("/signin")}
+          onClick={() => navigate('/signin')}
           style={{
-            backgroundColor: "#0ea5e9",
-            color: "white",
+            backgroundColor: '#0ea5e9',
+            color: 'white',
           }}
-          className="px-7 py-4 rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+          className="py-4 rounded-md px-7 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
         >
           <span className="relative z-10 transition-all duration-300 group-hover:translate-x-1">
             Sign In
@@ -82,7 +83,7 @@ const ViewBlog = () => {
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 ml-2 transition-all duration-300 transform group-hover:translate-x-1"
+            className="w-5 h-5 ml-2 transition-all duration-300 transform group-hover:translate-x-1"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -98,18 +99,18 @@ const ViewBlog = () => {
   }
 
   if (!blog) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return <p className="mt-10 text-center">Loading...</p>;
   }
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl p-6 mx-auto">
         <div className="relative mb-6">
           <div className="absolute top-0 left-0">
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
               alt="Profile"
-              className="w-20 h-20 rounded-full border-4 border-indigo-500 shadow-lg"
+              className="w-20 h-20 border-4 border-indigo-500 rounded-full shadow-lg"
             />
           </div>
           <div className="ml-24">
@@ -118,16 +119,16 @@ const ViewBlog = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold mb-4">
+        <div className="p-6 mb-6 bg-white rounded-lg shadow-md">
+          <h1 className="mb-4 text-3xl font-bold">
             The Beauty of Modern Web Design
           </h1>
           <img
             src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
             alt="Blog"
-            className="w-full h-64 object-cover rounded-lg mb-4"
+            className="object-cover w-full h-64 mb-4 rounded-lg"
           />
-          <p className="text-gray-700 leading-relaxed text-base mb-4">
+          <p className="mb-4 text-base leading-relaxed text-gray-700">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -139,10 +140,10 @@ const ViewBlog = () => {
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <button className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-200">
+          <button className="flex items-center gap-2 px-4 py-2 text-indigo-600 bg-indigo-100 rounded-full hover:bg-indigo-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -150,10 +151,10 @@ const ViewBlog = () => {
             </svg>
             <span>Like</span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-pink-100 text-pink-600 rounded-full hover:bg-pink-200">
+          <button className="flex items-center gap-2 px-4 py-2 text-pink-600 bg-pink-100 rounded-full hover:bg-pink-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -161,10 +162,10 @@ const ViewBlog = () => {
             </svg>
             <span>Comment</span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-600 rounded-full hover:bg-teal-200">
+          <button className="flex items-center gap-2 px-4 py-2 text-teal-600 bg-teal-100 rounded-full hover:bg-teal-200">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >
@@ -176,7 +177,7 @@ const ViewBlog = () => {
       </div>
       <section class="flex flex-col justify-center max-w-6xl min-h-screen px-4 py-10 mx-auto sm:px-6">
         <div class="flex flex-wrap items-center justify-between mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-800">
             Related Posts
           </h2>
         </div>
@@ -186,7 +187,7 @@ const ViewBlog = () => {
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
               alt="Blog Image"
-              className="object-cover w-full h-48 md:h-full transition-transform duration-500 hover:scale-105"
+              className="object-cover w-full h-48 transition-transform duration-500 md:h-full hover:scale-105"
             />
             <div class="flex flex-grow">
               <div class="triangle"></div>
@@ -225,7 +226,7 @@ const ViewBlog = () => {
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
               alt="Blog Image"
-              className="object-cover w-full h-48 md:h-full transition-transform duration-500 hover:scale-105"
+              className="object-cover w-full h-48 transition-transform duration-500 md:h-full hover:scale-105"
             />
             <div class="flex flex-grow">
               <div class="triangle"></div>
@@ -264,7 +265,7 @@ const ViewBlog = () => {
             <img
               src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
               alt="Blog Image"
-              className="object-cover w-full h-48 md:h-full transition-transform duration-500 hover:scale-105"
+              className="object-cover w-full h-48 transition-transform duration-500 md:h-full hover:scale-105"
             />
             <div class="flex flex-grow">
               <div class="triangle"></div>
@@ -302,7 +303,7 @@ const ViewBlog = () => {
       </section>
       <section class="bg-gray-100 py-8">
         <div class="container mx-auto px-4">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          <h2 className="mb-6 text-2xl font-semibold text-gray-800">
             comments
           </h2>
           <div class="space-y-4">
@@ -400,8 +401,8 @@ const ViewBlog = () => {
             <button
               type="submit"
               style={{
-                backgroundColor: "#0ea5e9",
-                color: "white",
+                backgroundColor: '#0ea5e9',
+                color: 'white',
               }}
               className="px-4 py-2 rounded-md hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
             >
