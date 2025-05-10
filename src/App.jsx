@@ -10,6 +10,7 @@ import EditBlog from './pages/blog/EditBlog';
 import Reports from './pages/blog/Reports';
 import AdminDashboard from './pages/Admin/adminDashboard';
 import ViewReport from './pages/blog/ViewReport';
+import CreateBlog from './features/blog/CreateBlog';
 
 // Uncomment and define UserContext if needed
 // export const UserContext = createContext({});
