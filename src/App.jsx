@@ -28,12 +28,12 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
         <Route path="signup" element={<UserAuthForm type="sign-up" />} />
-        <Route path="blogs/edit/:id" element={<EditBlog />} />
         <Route path="blogs/:id" element={<ViewBlog />} />
         <Route path="blogs/report/:id" element={<ViewReport />} />
         <Route path="reports" element={<AdminDashboard />} />
       </Route>
-      <Route path="/editor" element={<Editor />} />
+      <Route path="blogs/edit/:id" element={<EditBlog />} />
+      <Route path="/editor" element={<CreateBlog />} />
     </Routes>
     //</UserContext.Provider>
   );

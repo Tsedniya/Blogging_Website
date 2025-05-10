@@ -36,7 +36,7 @@ const PublishForm = () => {
   const handleKeyDown = (e) => {
     if (e.keyCode === 13 || e.keyCode === 188) {
       e.preventDefault();
-      let tag = e.target.value();
+      let tag = e.target.value;
 
       if (tags.length < tagLimit) {
         if (!tags.includes(tag) && tag.length) {
@@ -45,20 +45,18 @@ const PublishForm = () => {
           toast.error(`You can add a maximum of ${tagLimit} tags.`);
         }
         e.target.value = ''; // Clear input after adding tag
+      } else {
+        toast.error(`You can add a maximum of ${tagLimit} tags.`);
       }
     }
   };
 
   const publishBlog = (e) => {
-    if (e.target.className.includes('disable')) {
-      return;
-    }
-    if (!title.length) {
-      return toast.error('Write blog title before publishing.');
-    }
-    if (!des.length || des.length > characterLimit) {
+    if (e.target.className.includes('disable')) return;
+    if (!title) return toast.error('Write blog title before publishing.');
+    if (!des || des.length > characterLimit) {
       return toast.error(
-        `Write a description about the blog (max ${characterLimit} characters) to publish.`
+        `Description must be under ${characterLimit} characters.`
       );
     }
     if (!tags.length) {
@@ -115,7 +113,6 @@ const PublishForm = () => {
           <div className="w-full mt-4 overflow-hidden rounded-lg aspect-video bg-grey">
             <img src={banner} alt="Blog Banner" />
           </div>
-
           <h1 className="mt-2 text-4xl font-medium leading-tight line-clamp-2">
             {title}
           </h1>
@@ -132,7 +129,6 @@ const PublishForm = () => {
             className="pl-4 input-box"
             onChange={handleBlogTitleChange}
           />
-
           <p className="mb-2 text-dark-grey mt-9">
             Short description about your blog
           </p>
@@ -172,7 +168,9 @@ const PublishForm = () => {
         <p className="mt-1 mb-4 text-right text-dark-grey">
           {tagLimit - tags.length} Tags Left
         </p>
-        <button className="px-8 btn-dark">Publish</button>
+        <button className="px-8 btn-dark" onClick={publishBlog}>
+          Publish
+        </button>
       </section>
     </AnimationWrapper>
   );

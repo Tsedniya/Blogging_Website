@@ -1,18 +1,24 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../imgs/logo.png';
 import AnimationWrapper from '../common/page-animation';
 import defaultBanner from '../imgs/blog banner.png';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 //import { EditorContext } from "../pages/editor.pages";
 import EditorJS from '@editorjs/editorjs';
 import { tools } from './tools.component';
 import Editor from '../pages/editor.pages';
 import { Toaster, toast } from 'react-hot-toast';
+import { EditorContext } from '../context/editor-context';
 
 const BlogEditor = () => {
-  /*let {
-        blog,blog:{title,banner, content, tags,des}, setBlog, textEditor, setTextEditor, setEditorState}
-    } = useContext( EditorContext)*/
+  let {
+    blog,
+    blog: { title, banner, content, tags, des },
+    setBlog,
+    textEditor,
+    setTextEditor,
+    setEditorState,
+  } = useContext(EditorContext);
 
   /*let img = e.target.files[0];
 
@@ -33,21 +39,19 @@ const BlogEditor = () => {
            }
           })*/
 
-  useEffect(() => {
-    if (!texteditor.isready) {
-      setTextEditor(
-        new EditorJS({
-          holderId: 'textEditor',
-          data: content,
-          tools: tools,
-          placeholder: "let's write an awesome story",
-        })
-      );
-    }
-  }, []);
-  let {
-    userAuth: { access_token },
-  } = useContext(UserContext);
+  // useEffect(() => {
+  //   if (!texteditor.isready) {
+  //     setTextEditor(
+  //       new EditorJS({
+  //         holderId: "textEditor",
+  //         data: content,
+  //         tools: tools,
+  //         placeholder: "let's write an awesome story",
+  //       })
+  //     );
+  //   }
+  // }, []);
+  // let { userAuth : {access_token}} = useContext(UserContext)
   let navigate = useNavigate();
 
   const handleSaveDraft = (e) => {
@@ -161,12 +165,12 @@ const BlogEditor = () => {
                   type="file"
                   accept=".png, jpg, jpeg"
                   hidden
-                  //onChange={handelBannerUpload}
+                  //   onChange={handelBannerUpload}
                 />
               </label>
             </div>
             <textarea
-              defaultValue={title}
+              //   defaultValue={title}
               placeholder="Blog Title"
               className="w-full h-20 mt-10 text-4xl font-medium leading-tight outline-none resize-none placeholder:opacity-40"
               onKeyDown={handleTitleKeyDown}
