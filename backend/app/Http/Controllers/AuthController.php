@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -82,8 +83,8 @@ class AuthController extends Controller
             $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
-                    'name' => $googleUser->getName(),
-                    'password' => Hash::make(str_random(16)), // Random password for Google users
+                    'password' => Hash::make(Str::random(16)), // Random password for Google users
+                    
                 ]
             );
 

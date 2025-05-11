@@ -78,7 +78,7 @@ class BlogController extends Controller
             return response()->json($comments);
         } catch (\Exception $e) {
          
-            \Log::error('Error fetching comments:', [
+            Log::error('Error fetching comments:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -97,7 +97,7 @@ class BlogController extends Controller
                 ->get();
             return response()->json($reports);
         } catch(\Exception $e){
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -117,7 +117,7 @@ class BlogController extends Controller
     
             return response()->json($reportedBlogs);
         } catch (\Exception $e) {
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'user_id' => $request->user()->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -138,7 +138,7 @@ class BlogController extends Controller
     
             return response()->json($likes);
         } catch (\Exception $e) {
-            \Log::error('Error fetching likes:', [
+            Log::error('Error fetching likes:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
