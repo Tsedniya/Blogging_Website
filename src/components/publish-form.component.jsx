@@ -1,9 +1,9 @@
-import Tag from "./tags.component";
-import { useContext } from "react";
-import { Toaster, toast } from "react-hot-toast";
-import AnimationWrapper from "../common/page-animation";
-import { useNavigate } from "react-router-dom"; // Ensure this import is correct
-import { EditorContext } from "../context/editor-context"; // Ensure this import is correct
+import Tag from './tags.component';
+import { useContext } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import AnimationWrapper from '../common/page-animation';
+import { useNavigate } from 'react-router-dom'; // Ensure this import is correct
+import { EditorContext } from '../context/editor-context'; // Ensure this import is correct
 
 const PublishForm = () => {
   const characterLimit = 200;
@@ -20,7 +20,7 @@ const PublishForm = () => {
   };
 
   const handleCloseEvent = () => {
-    setEditorState("editor");
+    setEditorState('editor');
   };
 
   const handleBlogTitleChange = (e) => {
@@ -36,7 +36,7 @@ const PublishForm = () => {
   const handleKeyDown = (e) => {
     if (e.keyCode === 13 || e.keyCode === 188) {
       e.preventDefault();
-      let tag = e.target.value();
+      let tag = e.target.value;
 
       if (tags.length < tagLimit) {
         if (!tags.includes(tag) && tag.length) {
@@ -44,29 +44,27 @@ const PublishForm = () => {
         } else {
           toast.error(`You can add a maximum of ${tagLimit} tags.`);
         }
-        e.target.value = ""; // Clear input after adding tag
+        e.target.value = ''; // Clear input after adding tag
+      } else {
+        toast.error(`You can add a maximum of ${tagLimit} tags.`);
       }
     }
   };
 
   const publishBlog = (e) => {
-    if (e.target.className.includes("disable")) {
-      return;
-    }
-    if (!title.length) {
-      return toast.error("Write blog title before publishing.");
-    }
-    if (!des.length || des.length > characterLimit) {
+    if (e.target.className.includes('disable')) return;
+    if (!title) return toast.error('Write blog title before publishing.');
+    if (!des || des.length > characterLimit) {
       return toast.error(
-        `Write a description about the blog (max ${characterLimit} characters) to publish.`
+        `Description must be under ${characterLimit} characters.`
       );
     }
     if (!tags.length) {
-      return toast.error("Enter at least 1 tag to help us rank your blog.");
+      return toast.error('Enter at least 1 tag to help us rank your blog.');
     }
 
-    let loadingToast = toast.loading("Publishing...");
-    e.target.classList.add("disable"); // Add disable class
+    let loadingToast = toast.loading('Publishing...');
+    e.target.classList.add('disable'); // Add disable class
 
     let blogObj = {
       title,
@@ -102,7 +100,7 @@ const PublishForm = () => {
 
   return (
     <AnimationWrapper>
-      <section className="w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap-4">
+      <section className="grid items-center w-screen min-h-screen py-16 lg:grid-cols-2 lg:gap-4">
         <Toaster />
         <button
           className="w-12 h-12 absolute right-[5vw] z-10 top-[5%] lg:top-[10%]"
@@ -111,68 +109,68 @@ const PublishForm = () => {
           <i className="fi fi-rs-cross-small"></i>
         </button>
         <div className="max-w-[550px] center">
-          <p className="text-dark-grey mb-1">Preview</p>
-          <div className="w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4">
+          <p className="mb-1 text-dark-grey">Preview</p>
+          <div className="w-full mt-4 overflow-hidden rounded-lg aspect-video bg-grey">
             <img src={banner} alt="Blog Banner" />
           </div>
-
-          <h1 className="text-4xl font-medium mt-2 leading-tight line-clamp-2">
+          <h1 className="mt-2 text-4xl font-medium leading-tight line-clamp-2">
             {title}
           </h1>
-          <p className="font-inter line-clamp-2 text-xl leading-7 mt-4">
+          <p className="mt-4 text-xl leading-7 font-inter line-clamp-2">
             {des}
           </p>
         </div>
         <div className="border-grey lg:border-1 lg:pl-8">
-          <p className="text-dark-grey mb-2 mt-9">Blog Title</p>
+          <p className="mb-2 text-dark-grey mt-9">Blog Title</p>
           <input
             type="text"
             placeholder="Blog Title"
             value={title}
-            className="input-box pl-4"
+            className="pl-4 input-box"
             onChange={handleBlogTitleChange}
           />
-
-          <p className="text-dark-grey mb-2 mt-9">
+          <p className="mb-2 text-dark-grey mt-9">
             Short description about your blog
           </p>
           <input
             type="text"
             placeholder="Short Description"
             value={des}
-            className="input-box pl-4"
+            className="pl-4 input-box"
             onChange={handleBlogDesChange}
           />
         </div>
         <textarea
           maxLength={characterLimit}
           value={des}
-          className="h-40 resize-none leading-7 input-box pl-4"
+          className="h-40 pl-4 leading-7 resize-none input-box"
           onChange={handleBlogDesChange}
           onKeyDown={handleTitleKeyDown}
         />
-        <p className="mt-1 text-dark-grey text-sm text-right">
+        <p className="mt-1 text-sm text-right text-dark-grey">
           {characterLimit - des.length} characters left
         </p>
 
-        <p className="text-dark-grey mb-2 mt-9">
+        <p className="mb-2 text-dark-grey mt-9">
           Topics - (Helps in searching and ranking your blog post)
         </p>
-        <div className="relative input-box pl-2 py-2 pb-4">
+        <div className="relative py-2 pb-4 pl-2 input-box">
           <input
             type="text"
             placeholder="Topics"
-            className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white"
+            className="sticky top-0 left-0 pl-4 mb-3 bg-white input-box focus:bg-white"
             onKeyDown={handleKeyDown}
           />
           {tags.map((tag, i) => {
             return <Tag tag={tag} tagIndex={i} key={i} />;
           })}
         </div>
-        <p className="mt-1 mb-4 text-dark-grey text-right">
+        <p className="mt-1 mb-4 text-right text-dark-grey">
           {tagLimit - tags.length} Tags Left
         </p>
-        <button className="btn-dark px-8">Publish</button>
+        <button className="px-8 btn-dark" onClick={publishBlog}>
+          Publish
+        </button>
       </section>
     </AnimationWrapper>
   );

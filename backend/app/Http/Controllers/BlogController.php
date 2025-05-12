@@ -6,7 +6,11 @@ use App\Models\Blog;
 use App\Models\Comment;
 use App\Models\Report;
 
+use App\Models\Like;
 
+use Illuminate\Support\Facades\Log;
+
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class BlogController extends Controller
@@ -144,4 +148,66 @@ public function reportBlog(Request $request, $id)
         return response()->json(['error' => 'Failed to submit report.'], 500);
     }
 }
+
+    // Function to get reported blogs by id
+    public function getReportedBlog($id){
+        try{
+            $reports = Report::with('user.profile')
+                ->where('blog_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+            return response()->json($reports);
+        } catch(\Exception $e){
+            \Log::error('Error fetching reported blogs:', [
+                'blog_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['error' => 'An error occurred while fetching reported blogs.', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getReportedBlogs(Request $request)
+    {
+        try {
+            $reportedBlogs = Report::with('blog.user.profile', 'blog.category')
+                ->where('user_id', $request->user()->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+            return response()->json($reportedBlogs);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching reported blogs:', [
+                'user_id' => $request->user()->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['error' => 'An error occurred while fetching reported blogs.', 'details' => $e->getMessage()], 500);
+        }
+    }
+    
+    // Function to get likes by blog id
+    public function getLikes($id)
+    {
+        try {
+            $likes = Like::with('user.profile')
+                ->where('blog_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+            return response()->json($likes);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching likes:', [
+                'blog_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['error' => 'An error occurred while fetching likes.', 'details' => $e->getMessage()], 500);
+        }
+    }
+                
 }
+
