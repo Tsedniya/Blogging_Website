@@ -10,15 +10,16 @@ use App\Http\Controllers\BlogController;
 
 use Illuminate\Session\Middleware\StartSession;
 
-Route::middleware([StartSession::class])->group(function () {
+
     Route::post('/login', [AuthController::class, 'login']);
+
     Route::post('/signup', [AuthController::class, 'signup']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/check-session', [AuthController::class, 'checkSession']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/blogs',[BlogController::class,'create']);
+    });
 
-  
-    
-});
 
 Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);

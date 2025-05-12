@@ -32,12 +32,14 @@ const UserAuthForm = ({ type }) => {
           ? { email: formData.email, password: formData.password }
           : formData;
 
-      const response = await api.post(endpoint, payload, {
-        withCredentials: true,
-      });
+      const response = await api.post(endpoint, payload);
 
       if (response.status === 200) {
         setMessage(response.data.message || "Success!");
+        if (type === "sign-in") {
+          localStorage.setItem("laravel-token", response.data.token);
+          window.location.href = "/";
+        }
         setIsSuccess(true);
 
         // Redirect to AdminDashboard after successful sign-in

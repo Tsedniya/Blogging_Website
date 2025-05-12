@@ -4,10 +4,12 @@ import BlogEditor from "../../components/BlogEditor";
 import api from "../../common/api/connect";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../auth/userAuth";
 
 const CreateBlog = () => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
+  const { isAtuthenticated } = useAuth();
   const handleSubmit = async (blog, imageFile) => {
     try {
       setLoading(true);
@@ -37,6 +39,7 @@ const CreateBlog = () => {
   };
   return (
     <div className="w-full flex flex-col justify-center">
+      <h1>{isAtuthenticated ? "true" : "false"}</h1>
       <Toaster />
       <BlogEditor
         onSubmit={handleSubmit}
@@ -47,7 +50,7 @@ const CreateBlog = () => {
         defaultData={{
           title: "",
           image: blogBanner,
-          content: [],
+          content: "",
           tags: [],
           category: "",
           loading: false,

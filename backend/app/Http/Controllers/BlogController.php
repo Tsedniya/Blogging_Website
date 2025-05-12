@@ -27,7 +27,7 @@ class BlogController extends Controller
             ->get();
         } else {
            
-            $blogs = Blog::with('description', 'user.profile', 'category')
+            $blogs = Blog::with('description', 'user.profile', 'category','likes','comments')
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
@@ -207,6 +207,10 @@ public function reportBlog(Request $request, $id)
     
             return response()->json(['error' => 'An error occurred while fetching likes.', 'details' => $e->getMessage()], 500);
         }
+    }
+
+    public function create(Request $request){
+        
     }
                 
 }
