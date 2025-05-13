@@ -10,12 +10,14 @@ import Reports from './pages/blog/Reports';
 import AdminDashboard from './pages/Admin/adminDashboard';
 import ViewReport from './pages/blog/ViewReport';
 import CreateBlog from './features/blog/CreateBlog';
-
+import AdminLayout from './components/AdminLayout';
+import NewAdminPage from './pages/Admin/NewAdminpage';
 import Dashboard from './pages/Dashboard';
 
 const App = () => {
   return (
     <Routes>
+      {/* Wrapper layout for normal user-facing pages */}
       <Route element={<Wrapper />}>
         <Route path="/" element={<Home />} />
         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
@@ -25,7 +27,17 @@ const App = () => {
         <Route path="reports" element={<AdminDashboard />} />
       </Route>
 
-      {/* Routes outside of Wrapper */}
+      {/* Admin Layout for dashboard and admin-specific pages */}
+      <Route
+        path="/dashboard"
+        element={
+          <AdminLayout>
+            <Dashboard />
+          </AdminLayout>
+        }
+      />
+
+      {/* Standalone pages */}
       <Route path="blogs/edit/:id" element={<EditBlog />} />
       <Route path="/editor" element={<CreateBlog />} />
     </Routes>
