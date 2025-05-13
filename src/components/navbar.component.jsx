@@ -6,7 +6,7 @@ import useAuth from "../auth/userAuth";
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
-  const { currentUser, isAuthenticated } = useAuth();
+  const { currentUser, isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   // const {userAuth, userAuth: {access_token, profile_img}} = useContext(UserContext);
@@ -16,7 +16,19 @@ const Navbar = () => {
         <Link to="/" className="flex-none w-14">
           <img src={logo} className="w-full" alt="Logo" />
         </Link>
-
+        <div className="hidden md:flex flex-1 items-center gap-4">
+          <Link to="/" className="text-dark-grey hover:text-twitter">
+            Home
+          </Link>
+          <Link to="/editor" className="text-dark-grey hover:text-twitter">
+            New
+          </Link>
+          {isAdmin && (
+            <Link to="/reports" className="text-dark-grey hover:text-twitter">
+              Reports
+            </Link>
+          )}
+        </div>
         <div
           className={`absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto ${
             searchBoxVisibility ? "show" : "hide"

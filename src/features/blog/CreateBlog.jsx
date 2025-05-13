@@ -18,9 +18,9 @@ const CreateBlog = () => {
       formData.append("description", blog.description);
       formData.append("content", JSON.stringify(blog.content));
       formData.append("tags", JSON.stringify(blog.tags));
-      formData.append("category", blog.category);
+      formData.append("category", 1);
       formData.append("image", imageFile);
-      await api.post("/blog", formData, {
+      await api.post("/blogs", formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Important for file uploads
         },

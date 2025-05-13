@@ -226,9 +226,12 @@ const ViewBlog = () => {
         </div>
 
         <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold mb-4">{blog.content}</h1>
+          <h1 className="text-xl font mb-4">{blog.content}</h1>
           <img
-            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
+            src={
+              blog.image ||
+              "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
+            }
             alt="Blog"
             className="w-full h-64 object-cover rounded-lg mb-4"
           />
@@ -239,39 +242,18 @@ const ViewBlog = () => {
 
         <div className="flex items-center gap-4 mb-6">
           <button className="flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-600 rounded-full hover:bg-indigo-200">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 16.343l-6.828-6.829a4 4 0 010-5.656z" />
-            </svg>
+            <i className="fi fi-rr-heart text-lg"></i>
             <span>Like</span>
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-pink-100 text-pink-600 rounded-full hover:bg-pink-200">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M18 10c0 3.866-3.582 7-8 7s-8-3.134-8-7 3.582-7 8-7 8 3.134 8 7zM8 9a1 1 0 112 0v2a1 1 0 11-2 0V9z" />
-            </svg>
+            <i className="fi fi-rr-comment text-lg"></i>
             <span>Comment</span>
           </button>
           <button
             onClick={openReportModal}
             className="flex items-center gap-2 px-4 py-2 bg-teal-100 text-teal-600 rounded-full hover:bg-teal-200"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
-            </svg>
+            <i className="fi fi-rr-exclamation text-lg"></i>
             <span>Report</span>
           </button>
         </div>

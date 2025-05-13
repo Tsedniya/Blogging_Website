@@ -18,6 +18,7 @@ use Illuminate\Session\Middleware\StartSession;
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/blogs',[BlogController::class,'create']);
+        Route::put('/blogs/{id}',[BlogController::class,'edit']);
     });
 
 

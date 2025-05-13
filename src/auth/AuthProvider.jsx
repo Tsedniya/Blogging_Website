@@ -38,6 +38,14 @@ const AuthProvider = ({ children }) => {
 
     fetchUser();
   }, []);
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen">
+        <div className="loader"></div>
+        <span className="text-gray-500 mt-3">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider

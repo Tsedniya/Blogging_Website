@@ -68,7 +68,7 @@ class AuthController extends Controller
             'email' => $user->profile->email,
             'profile_image' => $user->profile->profile_image,
             'role' => $user->role->name,
-            'is_admin' => $user->role->name === 'Admin',
+            'is_admin' => $user->role->name === 'admin',
         ], 200);
     }
  
