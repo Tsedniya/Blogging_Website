@@ -10,8 +10,7 @@ import Reports from './pages/blog/Reports';
 import AdminDashboard from './pages/Admin/adminDashboard';
 import ViewReport from './pages/blog/ViewReport';
 import CreateBlog from './features/blog/CreateBlog';
-import AdminLayout from './components/AdminLayout';
-import NewAdminPage from './pages/Admin/NewAdminpage';
+
 import Dashboard from './pages/Dashboard';
 
 const App = () => {
@@ -25,13 +24,7 @@ const App = () => {
         <Route path="blogs/report/:id" element={<ViewReport />} />
         <Route path="reports" element={<AdminDashboard />} />
       </Route>
-      <Route
-        path="/dashboard"
-        element={
-          <AdminLayout>
-            <Dashboard />
-          </AdminLayout>
-        }
+  
       />
       <Route path="blogs/edit/:id" element={<EditBlog />} />
       <Route path="/editor" element={<CreateBlog />} />
