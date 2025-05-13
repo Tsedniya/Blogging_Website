@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar.component';
 import UserAuthForm from './pages/userAuthForm.page';
-import Editor from './pages/editor.pages'; // Import your Editor component
+import Editor from './pages/editor.pages';
 import Home from './pages/dashboard/Home';
 import Wrapper from './components/Wrapper';
 import ViewBlog from './pages/blog/ViewBlog';
@@ -24,8 +24,8 @@ const App = () => {
         <Route path="blogs/report/:id" element={<ViewReport />} />
         <Route path="reports" element={<AdminDashboard />} />
       </Route>
-  
-      />
+
+      {/* Routes outside of Wrapper */}
       <Route path="blogs/edit/:id" element={<EditBlog />} />
       <Route path="/editor" element={<CreateBlog />} />
     </Routes>
