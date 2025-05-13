@@ -9,13 +9,12 @@ const Sidebar = ({ onMenuClick }) => {
     { id: "classes", icon: <FiBook size={24} />, label: "Classes" },
     { id: "settings", icon: <FiSettings size={24} />, label: "Settings" },
     { id: "notifications", icon: <FiBell size={24} />, label: "Notifications" },
-    { id: "logout", icon: <FiLogOut size={24} />, label: "Logout" },
   ];
 
   return (
     <div className="flex">
       {/* Sidebar */}
-      <aside className="w-80 h-screen bg-gray-900 text-black flex flex-col overflow-y-auto">
+      <aside className="w-80 h-screen bg-gray-900 text-white flex flex-col overflow-y-auto border-r border-gray-700">
         {/* Logo Section */}
         <div className="p-6">
           <div className="flex items-center gap-4">
@@ -24,7 +23,7 @@ const Sidebar = ({ onMenuClick }) => {
           </div>
         </div>
 
-        {/* Scrollable Navigation Menu */}
+        {/* Navigation Menu */}
         <div className="flex-1 py-4">
           <nav>
             <ul className="space-y-2 px-4">
@@ -43,7 +42,7 @@ const Sidebar = ({ onMenuClick }) => {
           </nav>
         </div>
 
-        {/* Fixed Logout Button */}
+        {/* Logout Button */}
         <div className="p-4">
           <button
             onClick={() => onMenuClick("logout")}

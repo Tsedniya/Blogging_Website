@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar.component';
 import UserAuthForm from './pages/userAuthForm.page';
-import Editor from './pages/editor.pages'; // Import your Editor component
+import Editor from './pages/editor.pages';
 import Home from './pages/dashboard/Home';
 import Wrapper from './components/Wrapper';
 import ViewBlog from './pages/blog/ViewBlog';
@@ -17,6 +17,7 @@ import Dashboard from './pages/Dashboard';
 const App = () => {
   return (
     <Routes>
+      {/* Wrapper layout for normal user-facing pages */}
       <Route element={<Wrapper />}>
         <Route path="/" element={<Home />} />
         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
@@ -25,6 +26,8 @@ const App = () => {
         <Route path="blogs/report/:id" element={<ViewReport />} />
         <Route path="reports" element={<AdminDashboard />} />
       </Route>
+
+      {/* Admin Layout for dashboard and admin-specific pages */}
       <Route
         path="/dashboard"
         element={
@@ -33,6 +36,8 @@ const App = () => {
           </AdminLayout>
         }
       />
+
+      {/* Standalone pages */}
       <Route path="blogs/edit/:id" element={<EditBlog />} />
       <Route path="/editor" element={<CreateBlog />} />
     </Routes>
