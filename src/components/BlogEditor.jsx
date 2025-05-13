@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import logo from "../imgs/logo.png";
@@ -9,23 +9,19 @@ const categories = [
   },
   {
     id: 2,
-    name: "Health",
-  },
-  {
-    id: 3,
-    name: "Lifestyle",
-  },
-  {
-    id: 4,
     name: "Education",
   },
   {
-    id: 5,
-    name: "Business",
+    id: 3,
+    name: "Programming",
   },
   {
-    id: 6,
-    name: "Travel",
+    id: 4,
+    name: "Health",
+  },
+  {
+    id: 5,
+    name: "Fitness",
   },
 ];
 const BlogEditor = ({
@@ -43,6 +39,18 @@ const BlogEditor = ({
     category: defaultData.category || "",
     description: defaultData.description || "",
   });
+
+  useEffect(() => {
+    setBlog(() => ({
+      title: defaultData.title || "",
+      image: defaultData.image || "",
+      content: defaultData.content || "",
+      tags: defaultData.tags || [],
+      category: defaultData.category || "",
+      description: defaultData.description || "",
+    }));
+  }, [defaultData]);
+
   const [imageFile, setImageFile] = useState(null);
 
   const handleImageChange = (e) => {
