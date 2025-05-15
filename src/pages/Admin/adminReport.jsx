@@ -20,7 +20,7 @@ const blogs = [
   },
 ];
 
-function AdminDashboard() {
+function AdminReport() {
   return (
     <section class="py-4 ">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -33,4 +33,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default AdminReport;

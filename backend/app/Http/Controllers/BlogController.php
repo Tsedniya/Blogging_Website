@@ -79,7 +79,7 @@ class BlogController extends Controller
             return response()->json($comments);
         } catch (\Exception $e) {
          
-            \Log::error('Error fetching comments:', [
+            Log::error('Error fetching comments:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -114,7 +114,7 @@ class BlogController extends Controller
     
             return response()->json($comment, 201);
         } catch (\Exception $e) {
-            \Log::error('Error adding comment:', [
+            Log::error('Error adding comment:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
             ]);
@@ -158,7 +158,7 @@ public function reportBlog(Request $request, $id)
                 ->get();
             return response()->json($reports);
         } catch(\Exception $e){
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -178,7 +178,7 @@ public function reportBlog(Request $request, $id)
     
             return response()->json($reportedBlogs);
         } catch (\Exception $e) {
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'user_id' => $request->user()->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -187,6 +187,27 @@ public function reportBlog(Request $request, $id)
             return response()->json(['error' => 'An error occurred while fetching reported blogs.', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // Function to get all the reported blogs full information
+    public function getAllReportedBlogs()
+    {
+        try {
+            $reportedBlogs = Report::with('blog.user.profile', 'blog.category', 'blog.description', 'user.profile')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($reportedBlogs);
+        } catch (\Exception $e) {
+            Log::error('Error fetching all reported blogs:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['error' => 'An error occurred while fetching all reported blogs.', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    
     
     // Function to get likes by blog id
     public function getLikes($id)
@@ -199,7 +220,7 @@ public function reportBlog(Request $request, $id)
     
             return response()->json($likes);
         } catch (\Exception $e) {
-            \Log::error('Error fetching likes:', [
+            Log::error('Error fetching likes:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -249,7 +270,7 @@ public function reportBlog(Request $request, $id)
             'blog' => $blog->load('description', 'category', 'user.profile'),
         ], 201);
     } catch (\Exception $e) {
-        \Log::error('Error creating blog:', [
+        Log::error('Error creating blog:', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
         ]);
@@ -298,7 +319,7 @@ public function reportBlog(Request $request, $id)
                 'blog' => $blog->load('description', 'category', 'user.profile'),
             ], 200);
         } catch (\Exception $e) {
-            \Log::error('Error updating blog:', [
+            Log::error('Error updating blog:', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
