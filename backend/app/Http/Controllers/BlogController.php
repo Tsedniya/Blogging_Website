@@ -114,7 +114,7 @@ class BlogController extends Controller
     
             return response()->json($comment, 201);
         } catch (\Exception $e) {
-            \Log::error('Error adding comment:', [
+            Log::error('Error adding comment:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
             ]);
@@ -270,7 +270,7 @@ public function reportBlog(Request $request, $id)
             'blog' => $blog->load('description', 'category', 'user.profile'),
         ], 201);
     } catch (\Exception $e) {
-        \Log::error('Error creating blog:', [
+        Log::error('Error creating blog:', [
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
         ]);
@@ -319,7 +319,7 @@ public function reportBlog(Request $request, $id)
                 'blog' => $blog->load('description', 'category', 'user.profile'),
             ], 200);
         } catch (\Exception $e) {
-            \Log::error('Error updating blog:', [
+            Log::error('Error updating blog:', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
