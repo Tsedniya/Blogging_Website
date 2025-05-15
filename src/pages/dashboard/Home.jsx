@@ -22,8 +22,8 @@ const blogs = [
 
 function Home() {
   return (
-    <section class="py-4 ">
-      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="py-4 ">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex justify-center items-center p-4">
           <div className="relative max-w-[800px] mx-auto">
             <button
@@ -138,7 +138,7 @@ function Home() {
             </button>
           </div>
         </div>
-        <h2 class="font-manrope text-4xl font-bold text-gray-900 text-center mb-16">
+        <h2 className="font-manrope text-4xl font-bold text-gray-900 text-center mb-16">
           Our latest blog
         </h2>
         <BlogList />

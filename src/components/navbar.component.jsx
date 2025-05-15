@@ -1,10 +1,13 @@
 import { useState } from "react";
 import logo from "../imgs/logo.png";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import UserNavigationPanel from "./user-navigation.component";
+import useAuth from "../auth/userAuth";
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
+  const { currentUser, isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   // const {userAuth, userAuth: {access_token, profile_img}} = useContext(UserContext);
   return (
@@ -13,7 +16,19 @@ const Navbar = () => {
         <Link to="/" className="flex-none w-14">
           <img src={logo} className="w-full" alt="Logo" />
         </Link>
-
+        <div className="hidden md:flex flex-1 items-center gap-4">
+          <Link to="/" className="text-dark-grey hover:text-twitter">
+            Home
+          </Link>
+          <Link to="/editor" className="text-dark-grey hover:text-twitter">
+            New
+          </Link>
+          {isAdmin && (
+            <Link to="/reports" className="text-dark-grey hover:text-twitter">
+              Reports
+            </Link>
+          )}
+        </div>
         <div
           className={`absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:border-0 md:block md:relative md:inset-0 md:p-0 md:w-auto ${
             searchBoxVisibility ? "show" : "hide"
@@ -83,12 +98,40 @@ const Navbar = () => {
                     */}
 
           {/* <UserNavigationPanel/> */}
-          <Link className="btn-dark py-2" to="/signin">
-            Sign In
-          </Link>
-          <Link className="btn-light py-2 hidden md:block" to="/signup">
-            Sign Up
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <button
+                className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10"
+                onClick={() => {
+                  localStorage.removeItem("laravel-token");
+                  window.location = "/";
+                }}
+                aria-label="Logout"
+              >
+                <i className="fi fi-rr-sign-out-alt text-2xl block mt-1"></i>
+              </button>
+              <div className="relative">
+                <button className="w-12 h-12 mt-1">
+                  <img
+                    src={
+                      currentUser?.profile_image ||
+                      "https://picsum.photos/300/300"
+                    }
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link className="btn-dark py-2" to="/signin">
+                Sign In
+              </Link>
+              <Link className="btn-light py-2 hidden md:block" to="/signup">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </>

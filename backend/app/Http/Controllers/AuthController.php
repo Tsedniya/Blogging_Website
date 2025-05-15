@@ -19,22 +19,58 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
     
-        $user = User::where('email', $request->email)->first();
-    
+        // Query the database for the user using email and password
+        $user = User::join('profiles', 'users.profile_id', '=', 'profiles.id')
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->where('profiles.email', $request->email)
+            ->select('users.*', 'profiles.name as profile_name', 'profiles.email', 'roles.name as role_name')
+            ->first();
+        
         if (!$user) {
             return response()->json(['message' => 'User not found. Please sign up first.'], 404);
         }
     
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $request->session()->regenerate();
-    
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => Auth::user()->load('profile'), // Include profile data
-            ], 200);
+        // Verify the password
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid credentials. Please try again.'], 401);
         }
     
-        return response()->json(['message' => 'Invalid credentials. Please try again.'], 401);
+        // Log in the user
+        Auth::loginUsingId($user->id);
+        // $request->session()->regenerate();
+    
+        $token = $user->createToken('auth-token')->plainTextToken;
+        // Return the user data including role
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->profile_name,
+                'email' => $user->email,
+                'role' => $user->role_name,
+            ],
+        ], 200);
+    }
+    public function me(Request $request)
+
+    {
+        $user = User::with(['profile', 'role'])
+            ->where('id', $request->user()->id)
+            ->first();
+    
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->profile->name,
+            'email' => $user->profile->email,
+            'profile_image' => $user->profile->profile_image,
+            'role' => $user->role->name,
+            'is_admin' => $user->role->name === 'admin',
+        ], 200);
     }
  
     public function signup(Request $request)

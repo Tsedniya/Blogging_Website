@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import AnimationWrapper from "../common/page-animation";
-import api from "../common/api/connect"; // Import the axios instance
+import api from "../common/api/connect";
 
 const UserAuthForm = ({ type }) => {
   const [formData, setFormData] = useState({
@@ -13,14 +13,13 @@ const UserAuthForm = ({ type }) => {
   });
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  const navigate = useNavigate();
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("Processing...");
@@ -33,13 +32,20 @@ const UserAuthForm = ({ type }) => {
           ? { email: formData.email, password: formData.password }
           : formData;
 
-      const response = await api.post(endpoint, payload, {
-        withCredentials: true,
-      });
+      const response = await api.post(endpoint, payload);
 
       if (response.status === 200) {
         setMessage(response.data.message || "Success!");
+        if (type === "sign-in") {
+          localStorage.setItem("laravel-token", response.data.token);
+          window.location.href = "/";
+        }
         setIsSuccess(true);
+
+        // Redirect to AdminDashboard after successful sign-in
+        if (type === "sign-in") {
+          navigate("/dashboard/admin");
+        }
       } else {
         setMessage(response.data.message || "Something went wrong.");
       }
@@ -49,7 +55,6 @@ const UserAuthForm = ({ type }) => {
     }
   };
 
-  // Handle Google login
   const handleGoogleLogin = () => {
     window.location.href = `${api.defaults.baseURL}/auth/google/redirect`;
   };
