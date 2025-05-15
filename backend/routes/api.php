@@ -37,3 +37,5 @@ Route::post('/blogs/{id}/report', [BlogController::class, 'reportBlog']);
 
     Route::get('/blogs/{id}/likes', [BlogController::class, 'getLikes']); 
     Route::get('/blogs/{id}/reports', [BlogController::class, 'getReportedBlog']);
+    
+Route::get('/reported-blogs', [BlogController::class, 'getAllReportedBlogs']);

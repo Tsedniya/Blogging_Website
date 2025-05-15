@@ -187,6 +187,27 @@ public function reportBlog(Request $request, $id)
             return response()->json(['error' => 'An error occurred while fetching reported blogs.', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // Function to get all the reported blogs full information
+    public function getAllReportedBlogs()
+    {
+        try {
+            $reportedBlogs = Report::with('blog.user.profile', 'blog.category', 'blog.description', 'user.profile')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($reportedBlogs);
+        } catch (\Exception $e) {
+            Log::error('Error fetching all reported blogs:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['error' => 'An error occurred while fetching all reported blogs.', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    
     
     // Function to get likes by blog id
     public function getLikes($id)
@@ -208,6 +229,6 @@ public function reportBlog(Request $request, $id)
             return response()->json(['error' => 'An error occurred while fetching likes.', 'details' => $e->getMessage()], 500);
         }
     }
-                
+            
 }
 

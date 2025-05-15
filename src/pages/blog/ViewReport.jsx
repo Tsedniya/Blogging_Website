@@ -8,6 +8,8 @@ const ViewReport = () => {
   const [blog, setBlog] = useState(null);
   const [comments, setComments] = useState([]);
   const [reports, setReports] = useState([]);
+  const [commentCounts, setCommentCounts] = useState({});
+  const [likesCounts, setLikesCounts] = useState({});
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -24,6 +26,10 @@ const ViewReport = () => {
 
         const commentsResponse = await api.get(`/blogs/${id}/comments`);
         setComments(commentsResponse.data);
+        setCommentCounts({ [id]: commentsResponse.data.length }); // Set comment count
+
+        const likesResponse = await api.get(`/blogs/${id}/likes`);
+        setLikesCounts({ [id]: likesResponse.data.length }); // Set likes count
 
         const reportsResponse = await api.get(`/blogs/${id}/reports`);
         setReports(reportsResponse.data);
@@ -51,6 +57,7 @@ const ViewReport = () => {
 
     fetchBlogData();
   }, [id]);
+
   if (error) {
     return (
       <div className="mt-10 text-center">
@@ -135,27 +142,38 @@ const ViewReport = () => {
         </div>
 
         <div className="flex items-center gap-4 mb-6">
-          <button className="flex items-center gap-2 px-4 py-2 text-indigo-600 bg-indigo-100 rounded-full hover:bg-indigo-200">
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-indigo-600 transition-all duration-300 rounded-full bg-indigo-50 hover:bg-indigo-100 hover:text-indigo-700 group"
+            type="button"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-5 h-5 transition-transform group-hover:scale-110"
+              viewBox="0 0 24 24"
               fill="currentColor"
-              viewBox="0 0 20 20"
             >
-              <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 16.343l-6.828-6.829a4 4 0 010-5.656z" />
+              <path
+                fillRule="evenodd"
+                d="M12 2.25c-2.429 0-4.817.178-7.152.521C2.87 3.061 1.5 4.795 1.5 6.741v6.018c0 1.946 1.37 3.68 3.348 3.97.877.129 1.761.234 2.652.316V21a.75.75 0 001.28.53l4.184-4.183a.39.39 0 01.266-.112c2.16-.169 4.26-.58 6.16-1.275 1.978-.29 3.348-2.023 3.348-3.97V6.741c0-1.947-1.37-3.68-3.348-3.97A49.145 49.145 0 0012 2.25zM8.25 8.625a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zm2.625 1.125a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z"
+                clipRule="evenodd"
+              />
             </svg>
-            <span>Like</span>
+            <span>{commentCounts[id] || 0} Comments</span>
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-pink-600 bg-pink-100 rounded-full hover:bg-pink-200">
+
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-pink-600 transition-all duration-300 rounded-full bg-pink-50 hover:bg-pink-100 hover:text-pink-700 group"
+            type="button"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="w-5 h-5"
+              className="w-5 h-5 transition-transform group-hover:scale-110"
+              viewBox="0 0 24 24"
               fill="currentColor"
-              viewBox="0 0 20 20"
             >
-              <path d="M18 10c0 3.866-3.582 7-8 7s-8-3.134-8-7 3.582-7 8-7 8 3.134 8 7zM8 9a1 1 0 112 0v2a1 1 0 11-2 0V9z" />
+              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
             </svg>
-            <span>Comment</span>
+            <span>{likesCounts[id] || 0} Likes</span>
           </button>
         </div>
       </div>
