@@ -14,12 +14,13 @@ const UserAuthForm = ({ type }) => {
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("Processing...");
@@ -36,15 +37,15 @@ const UserAuthForm = ({ type }) => {
 
       if (response.status === 200) {
         setMessage(response.data.message || "Success!");
-        if (type === "sign-in") {
-          localStorage.setItem("laravel-token", response.data.token);
-          window.location.href = "/";
-        }
         setIsSuccess(true);
+        localStorage.setItem("laravel-token", response.data.token); // Store the token in localStorage
 
-        // Redirect to AdminDashboard after successful sign-in
-        if (type === "sign-in") {
-          navigate("/dashboard/admin");
+        const userRole = response.data.user.role;
+        if (userRole === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+          window.location.reload();
         }
       } else {
         setMessage(response.data.message || "Something went wrong.");

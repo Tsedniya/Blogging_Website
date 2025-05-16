@@ -9,6 +9,10 @@ use App\Http\Controllers\BlogController;
 
 
 use Illuminate\Session\Middleware\StartSession;
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard-stats', [DashboardController::class, 'getStats']);
+Route::get('/users', [DashboardController::class, 'getAllUsers']);
 
 
     Route::post('/login', [AuthController::class, 'login']);

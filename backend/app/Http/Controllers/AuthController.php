@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Profile;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 
@@ -73,32 +74,46 @@ class AuthController extends Controller
         ], 200);
     }
  
-    public function signup(Request $request)
-    {
-        $request->validate([
-            'fullname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-        ]);
     
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-    
-    
-        $user->profile()->create([
-            'name' => $request->fullname,
-            'email' => $request->email,
-        ]);
-    
-        Auth::login($user);
-    
-        return response()->json([
-            'message' => 'Sign-up successful',
-            'user' => $user->load('profile'),
-        ], 200);
-    }
+public function signup(Request $request)
+{
+    $request->validate([
+        'fullname' => 'required|string|max:255',
+        'email' => 'required|email|unique:profiles,email',
+        'password' => 'required|string|min:6',
+    ]);
+
+    // Create the profile
+    $profile = Profile::create([
+        'name' => $request->fullname,
+        'email' => $request->email,
+    ]);
+
+    // Create the user and associate it with the profile
+    $user = User::create([
+        'profile_id' => $profile->id,
+        'role_id' => 2, // Assuming 2 is the ID for the 'user' role
+        'password' => Hash::make($request->password),
+    ]);
+
+    // Log in the user
+    Auth::loginUsingId($user->id);
+
+    // Generate a token for the user
+    $token = $user->createToken('auth-token')->plainTextToken;
+
+    // Return the user data including role and token
+    return response()->json([
+        'message' => 'Sign-up successful',
+        'token' => $token,
+        'user' => [
+            'id' => $user->id,
+            'name' => $profile->name,
+            'email' => $profile->email,
+            'role' => $user->role->name, // Assuming the role relationship exists
+        ],
+    ], 200);
+}
 
     
     public function redirectToGoogle()
