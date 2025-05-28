@@ -10,99 +10,104 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    // Manual login
+   
     public function login(Request $request)
     {
-        // Validate the request
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:6',
         ]);
-
-        // Check if the user exists in the database
+    
         $user = User::where('email', $request->email)->first();
-
+    
         if (!$user) {
             return response()->json(['message' => 'User not found. Please sign up first.'], 404);
         }
-
-        // Attempt to log in the user
+    
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-
+    
             return response()->json([
                 'message' => 'Login successful',
-                'user' => Auth::user(),
+                'user' => Auth::user()->load('profile'), // Include profile data
             ], 200);
         }
-
-        // If login fails
+    
         return response()->json(['message' => 'Invalid credentials. Please try again.'], 401);
     }
-
-    // Manual sign-up
+ 
     public function signup(Request $request)
     {
-        // Validate the request
         $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
-
-        // Create a new user
+    
         $user = User::create([
-            'name' => $request->fullname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
-        // Log in the user after sign-up
+    
+    
+        $user->profile()->create([
+            'name' => $request->fullname,
+            'email' => $request->email,
+        ]);
+    
         Auth::login($user);
-
+    
         return response()->json([
             'message' => 'Sign-up successful',
-            'user' => $user,
+            'user' => $user->load('profile'),
         ], 200);
     }
 
-    // Redirect to Google OAuth
+    
     public function redirectToGoogle()
     {
+       
         return Socialite::driver('google')->redirect();
     }
-
-    // Handle Google OAuth callback
+    
     public function handleGoogleCallback()
     {
         try {
+            // Retrieve the user's information from Google
             $googleUser = Socialite::driver('google')->stateless()->user();
-
-            // Find or create the user
+    
+            // Check if the user already exists in the database
             $user = User::firstOrCreate(
-                ['email' => $googleUser->getEmail()],
+                ['email' => $googleUser->getEmail()], // Match by email
                 [
-                    'name' => $googleUser->getName(),
-                    'password' => Hash::make(str_random(16)), // Random password for Google users
+                    'name' => $googleUser->getName(), // Use the name from Google
+                    'password' => Hash::make(uniqid()), // Generate a random password
                 ]
             );
-
-            // Log in the user
+    
+            if ($user->wasRecentlyCreated) {
+                $user->profile()->create([
+                    'name' => $googleUser->getName(),
+                    'email' => $googleUser->getEmail(),
+                ]);
+            }
+    
+            // Log the user in
             Auth::login($user);
-
+    
+            // Return a success response with the user's data
             return response()->json([
                 'message' => 'Login successful',
-                'user' => Auth::user(),
+                'user' => Auth::user()->load('profile'), // Include profile data
             ], 200);
         } catch (\Exception $e) {
+            // Handle any errors during the process
             return response()->json([
                 'message' => 'Authentication failed',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
-
-    // Logout method
     public function logout(Request $request)
     {
         Auth::logout();
@@ -112,7 +117,7 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logout successful'], 200);
     }
 
-    // Check session
+  
     public function checkSession(Request $request)
     {
         if (Auth::check()) {

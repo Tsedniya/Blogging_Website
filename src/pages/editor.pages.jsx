@@ -1,6 +1,6 @@
-import BlogEditor from "../components/blog-editor.component";
 import React, { useContext } from "react";
-import Publisher from "../components/publish-form.component"; // Import the Publisher component
+import BlogEditor from "../components/blog-editor.component";
+import PublishForm from "../components/publish-form.component"; // Import the Publisher component
 import { EditorContext } from "../context/editor-context"; // Import your context
 
 const Editor = () => {
@@ -8,7 +8,7 @@ const Editor = () => {
 
     return (
         <>
-            {editorState === "editor" ? <BlogEditor /> : <Publisher />}
+            {editorState === "editor" ? <BlogEditor /> : <PublishForm />}
         </>
     );
 };
