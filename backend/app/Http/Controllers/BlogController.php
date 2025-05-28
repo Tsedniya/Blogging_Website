@@ -27,7 +27,7 @@ class BlogController extends Controller
             ->get();
         } else {
            
-            $blogs = Blog::with('description', 'user.profile', 'category')
+            $blogs = Blog::with('description', 'user.profile', 'category','likes','comments')
                 ->orderBy('created_at', 'desc')
                 ->get();
         }
@@ -79,7 +79,7 @@ class BlogController extends Controller
             return response()->json($comments);
         } catch (\Exception $e) {
          
-            \Log::error('Error fetching comments:', [
+            Log::error('Error fetching comments:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -114,7 +114,7 @@ class BlogController extends Controller
     
             return response()->json($comment, 201);
         } catch (\Exception $e) {
-            \Log::error('Error adding comment:', [
+            Log::error('Error adding comment:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
             ]);
@@ -158,7 +158,7 @@ public function reportBlog(Request $request, $id)
                 ->get();
             return response()->json($reports);
         } catch(\Exception $e){
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -178,7 +178,7 @@ public function reportBlog(Request $request, $id)
     
             return response()->json($reportedBlogs);
         } catch (\Exception $e) {
-            \Log::error('Error fetching reported blogs:', [
+            Log::error('Error fetching reported blogs:', [
                 'user_id' => $request->user()->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -187,6 +187,27 @@ public function reportBlog(Request $request, $id)
             return response()->json(['error' => 'An error occurred while fetching reported blogs.', 'details' => $e->getMessage()], 500);
         }
     }
+
+    // Function to get all the reported blogs full information
+    public function getAllReportedBlogs()
+    {
+        try {
+            $reportedBlogs = Report::with('blog.user.profile', 'blog.category', 'blog.description', 'user.profile')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return response()->json($reportedBlogs);
+        } catch (\Exception $e) {
+            Log::error('Error fetching all reported blogs:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['error' => 'An error occurred while fetching all reported blogs.', 'details' => $e->getMessage()], 500);
+        }
+    }
+
+    
     
     // Function to get likes by blog id
     public function getLikes($id)
@@ -199,7 +220,7 @@ public function reportBlog(Request $request, $id)
     
             return response()->json($likes);
         } catch (\Exception $e) {
-            \Log::error('Error fetching likes:', [
+            Log::error('Error fetching likes:', [
                 'blog_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -208,6 +229,103 @@ public function reportBlog(Request $request, $id)
             return response()->json(['error' => 'An error occurred while fetching likes.', 'details' => $e->getMessage()], 500);
         }
     }
-                
+
+    public function create(Request $request){
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'content' => 'required|string',
+            'category' => 'required|exists:categories,id', // Ensure the category exists
+            'image' => 'nullable|image|max:2048', // Optional image upload
+        ]);
+    
+
+    try {
+        // Retrieve the authenticated user
+        $user = $request->user();
+
+        // Handle the image upload if provided
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('blogs', 'public');
+        }
+        $imagePath = "http://localhost:8000/storage/" . $imagePath;
+
+        // Create the blog
+        $blog = Blog::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'image' => $imagePath,
+            'user_id' => $user->id,
+            'category_id' => $request->category,
+        ]);
+
+        // Create the blog description
+        $blog->description()->create([
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'message' => 'Blog created successfully',
+            'blog' => $blog->load('description', 'category', 'user.profile'),
+        ], 201);
+    } catch (\Exception $e) {
+        Log::error('Error creating blog:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+
+        return response()->json(['error' => 'Failed to create blog.'], 500);
+    }
+    }
+  public function edit(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'content' => 'required|string',
+            'category' => 'required|exists:categories,id', // Ensure the category exists
+            'image' => 'nullable|max:2048', // Optional image upload
+        ]);
+    
+        try {
+            // Retrieve the authenticated user
+            $user = $request->user();
+    
+            // Find the blog by ID
+            $blog = Blog::findOrFail($id);
+    
+            // Handle the image upload if provided
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('blogs', 'public');
+                $imagePath = "http://localhost:8000/storage/" . $imagePath;
+                $blog->image = $imagePath; // Update the image path in the blog
+            }
+    
+            // Update the blog details
+            $blog->title = $request->title;
+            $blog->content = $request->content;
+            $blog->category_id = $request->category;
+            $blog->save();
+    
+            // Update the blog description
+            $blog->description()->update([
+                'description' => $request->description,
+            ]);
+    
+            return response()->json([
+                'message' => 'Blog updated successfully',
+                'blog' => $blog->load('description', 'category', 'user.profile'),
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating blog:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            return response()->json(['error' => 'Failed to update blog.'], 500);
+        }
+    }
 }
 

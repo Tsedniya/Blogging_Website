@@ -9,16 +9,22 @@ use App\Http\Controllers\BlogController;
 
 
 use Illuminate\Session\Middleware\StartSession;
+use App\Http\Controllers\DashboardController;
 
-Route::middleware([StartSession::class])->group(function () {
+Route::get('/dashboard-stats', [DashboardController::class, 'getStats']);
+Route::get('/users', [DashboardController::class, 'getAllUsers']);
+
+
     Route::post('/login', [AuthController::class, 'login']);
+
     Route::post('/signup', [AuthController::class, 'signup']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/check-session', [AuthController::class, 'checkSession']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/me', [AuthController::class, 'me']);
+        Route::post('/blogs',[BlogController::class,'create']);
+        Route::put('/blogs/{id}',[BlogController::class,'edit']);
+    });
 
-  
-    
-});
 
 Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
@@ -37,3 +43,5 @@ Route::post('/blogs/{id}/report', [BlogController::class, 'reportBlog']);
 
     Route::get('/blogs/{id}/likes', [BlogController::class, 'getLikes']); 
     Route::get('/blogs/{id}/reports', [BlogController::class, 'getReportedBlog']);
+    
+Route::get('/reported-blogs', [BlogController::class, 'getAllReportedBlogs']);

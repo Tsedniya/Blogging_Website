@@ -7,20 +7,35 @@ function BlogReport() {
   const [error, setError] = useState('');
   const [commentCounts, setCommentCounts] = useState({});
   const [likesCounts, setLikesCounts] = useState({});
+  const [reportCounts, setReportCounts] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchReportedBlogs = async () => {
       try {
-        const response = await api.get('/index');
-        setBlogs(response.data);
+        const response = await api.get('/reported-blogs'); // Fetch reported blogs
+
+        const reportCounts = {};
+        response.data.forEach((report) => {
+          const blogId = report.blog.id;
+          reportCounts[blogId] = (reportCounts[blogId] || 0) + 1; // Count reports for each blog
+        });
+
+        const uniqueBlogs = Array.from(
+          new Map(
+            response.data.map((report) => [report.blog.id, report.blog])
+          ).values()
+        ); // Filter unique blogs based on blog.id
+
+        setBlogs(uniqueBlogs); // Set the unique blogs in state
+        setReportCounts(reportCounts); // Set the report counts in state
       } catch (error) {
-        console.error('Error fetching blogs:', error);
-        setError('Failed to fetch blogs.');
+        console.error('Error fetching reported blogs:', error);
+        setError('Failed to fetch reported blogs.');
       }
     };
 
-    fetchBlogs();
+    fetchReportedBlogs();
   }, []);
 
   useEffect(() => {
@@ -61,7 +76,6 @@ function BlogReport() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Helper function to truncate the description
   const truncateDescription = (description, wordLimit) => {
     const words = description.split(' ');
     if (words.length > wordLimit) {
@@ -87,7 +101,7 @@ function BlogReport() {
 
               <div className="flex flex-col justify-between p-6">
                 <h4 className="block mb-2 text-2xl font-bold leading-snug text-gray-900 transition-colors hover:text-indigo-600">
-                  {blog.title}
+                  {blog.title || ' '}
                 </h4>
 
                 <p className="mb-4 text-sm text-gray-500">
@@ -99,7 +113,10 @@ function BlogReport() {
                 </p>
 
                 <p className="block mb-6 text-base leading-relaxed text-gray-700">
-                  {truncateDescription(blog.description?.description || '', 20)}
+                  {truncateDescription(
+                    blog.description?.description || ' ',
+                    {}
+                  )}{' '}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <button
@@ -136,25 +153,18 @@ function BlogReport() {
                     <span>{likesCounts[blog.id] || 0} Likes</span>
                   </button>
 
-                  <button
-                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-teal-600 transition-all duration-300 rounded-full bg-teal-50 hover:bg-teal-100 hover:text-teal-700 group"
-                    type="button"
-                  >
+                  <button className="flex items-center gap-2 px-4 py-2 text-teal-600 bg-teal-100 rounded-full hover:bg-teal-200">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5 transition-transform group-hover:scale-110"
-                      viewBox="0 0 24 24"
+                      className="w-5 h-5"
                       fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
-                      <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z"
-                        clipRule="evenodd"
-                      />
+                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z" />
                     </svg>
-                    <span>1.2K Views</span>
+                    <span>{reportCounts[blog.id] || 0} Reports</span>
                   </button>
+
                   <button
                     onClick={() => navigate(`/blogs/report/${blog.id}`)} // Redirect to ViewReport with blog ID
                     className="flex items-center gap-2 px-4 py-2 ml-auto text-sm font-medium text-indigo-600 transition-all duration-300 border border-indigo-600 rounded-full hover:bg-indigo-100 hover:border-indigo-700 hover:text-indigo-700 group"

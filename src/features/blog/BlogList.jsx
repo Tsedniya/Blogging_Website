@@ -1,11 +1,13 @@
 import api from "../../common/api/connect";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../auth/userAuth";
 
 function BlogList() {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -36,23 +38,37 @@ function BlogList() {
 
   return (
     <>
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text</div>-red-500">{error}</p>}
       {blogs.map((blog) => (
         <div key={blog.id} className="flex flex-col items-center p-4 gap-1">
           <div className="max-w-[900px] w-full mx-auto">
             <div className="relative flex flex-col md:flex-row bg-clip-border rounded-xl bg-white text-gray-700 shadow-md w-full hover:shadow-lg transition-shadow duration-300">
               <div className="relative w-full md:w-2/5 m-0 overflow-hidden text-gray-700 bg-white rounded-t-xl md:rounded-r-none md:rounded-l-xl shrink-0">
                 <img
-                  src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
+                  src={
+                    blog.image ||
+                    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1471&amp;q=80"
+                  }
                   alt="Blog Image"
                   className="object-cover w-full h-48 md:h-full transition-transform duration-500 hover:scale-105"
                 />
               </div>
 
               <div className="p-6 flex flex-col justify-between">
-                <h4 className="block mb-2 text-2xl font-bold leading-snug text-gray-900 hover:text-indigo-600 transition-colors">
-                  {blog.title}
-                </h4>
+                <div className="flex items-center justify-start gap-2 mb-4">
+                  <h4 className="block mb-2 text-2xl font-bold leading-snug text-gray-900 hover:text-indigo-600 transition-colors">
+                    {blog.title}
+                  </h4>
+                  {currentUser?.id === blog.user.id && (
+                    <button
+                      onClick={() => navigate(`blogs/edit/${blog.id}`)} // Redirect to EditBlog with blog ID
+                      className="text-gray-500 hover:text-indigo-600 transition-colors"
+                      type="button"
+                    >
+                      <i className="fi fi-rr-edit text-sm"></i>
+                    </button>
+                  )}
+                </div>
 
                 <p className="text-sm text-gray-500 mb-4">
                   By{" "}
@@ -82,7 +98,7 @@ function BlogList() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span>24 Comments</span>
+                    <span>{blog.comments.length} Comments</span>
                   </button>
 
                   <button
@@ -97,7 +113,7 @@ function BlogList() {
                     >
                       <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                     </svg>
-                    <span>142 Likes</span>
+                    <span>{blog.likes.length} Likes</span>
                   </button>
 
                   <button

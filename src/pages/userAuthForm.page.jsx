@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import AnimationWrapper from "../common/page-animation";
-import api from "../common/api/connect"; // Import the axios instance
+import api from "../common/api/connect";
 
 const UserAuthForm = ({ type }) => {
   const [formData, setFormData] = useState({
@@ -13,14 +13,14 @@ const UserAuthForm = ({ type }) => {
   });
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
-
-  // Handle input changes
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
-
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("Processing...");
@@ -33,13 +33,20 @@ const UserAuthForm = ({ type }) => {
           ? { email: formData.email, password: formData.password }
           : formData;
 
-      const response = await api.post(endpoint, payload, {
-        withCredentials: true,
-      });
+      const response = await api.post(endpoint, payload);
 
       if (response.status === 200) {
         setMessage(response.data.message || "Success!");
         setIsSuccess(true);
+        localStorage.setItem("laravel-token", response.data.token); // Store the token in localStorage
+
+        const userRole = response.data.user.role;
+        if (userRole === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("/");
+          window.location.reload();
+        }
       } else {
         setMessage(response.data.message || "Something went wrong.");
       }
@@ -49,7 +56,6 @@ const UserAuthForm = ({ type }) => {
     }
   };
 
-  // Handle Google login
   const handleGoogleLogin = () => {
     window.location.href = `${api.defaults.baseURL}/auth/google/redirect`;
   };

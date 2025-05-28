@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'John Doe', 'email' => 'john@example.com', 'profile_image' => null],
             ['name' => 'Jane Smith', 'email' => 'jane@example.com', 'profile_image' => null],
             ['name' => 'Alice Johnson', 'email' => 'alice@example.com', 'profile_image' => null],
+            
         ]);
 
         // Seed users
